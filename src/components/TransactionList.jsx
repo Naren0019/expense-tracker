@@ -1,0 +1,3 @@
+import React from 'react';
+const money = value => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(Number(value));
+export default function TransactionList({items,onDelete}) {return <section className="panel"><h2>Transactions</h2>{items.length===0?<p>No transactions yet. Add your first one above.</p>:<div className="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Type</th><th>Amount</th><th>Action</th></tr></thead><tbody>{items.map(t=><tr key={t.id}><td>{t.date}</td><td>{t.category}</td><td>{t.description||'—'}</td><td><span className={t.type}>{t.type}</span></td><td>{money(t.amount)}</td><td><button className="danger" onClick={()=>onDelete(t.id)}>Delete</button></td></tr>)}</tbody></table></div>}</section>;}
