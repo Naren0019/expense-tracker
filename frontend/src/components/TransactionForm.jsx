@@ -1,0 +1,8 @@
+import React, { useState } from 'react';
+const today = () => new Date().toLocaleDateString('en-CA');
+export default function TransactionForm({onAdd}) {
+ const [form,setForm] = useState({type:'expense',amount:'',category:'Food',description:'',date:today()}); const [error,setError]=useState('');
+ const update = e => setForm(prev=>({...prev,[e.target.name]:e.target.value}));
+ async function submit(e) {e.preventDefault();setError('');try {await onAdd(form);setForm(prev=>({...prev,amount:'',description:''}));}catch(err){setError(err.response?.data?.error||'Unable to save transaction.');}}
+ return <section className="panel"><h2>Add transaction</h2><form onSubmit={submit} className="transaction-form"><label>Type<select name="type" value={form.type} onChange={update}><option value="expense">Expense</option><option value="income">Income</option></select></label><label>Amount (₹)<input name="amount" type="number" min="0.01" step="0.01" required value={form.amount} onChange={update}/></label><label>Category<select name="category" value={form.category} onChange={update}>{['Food','Shopping','Transport','Bills','Health','Entertainment','Salary','Freelance','Others'].map(c=><option key={c}>{c}</option>)}</select></label><label>Date<input name="date" type="date" required value={form.date} onChange={update}/></label><label className="wide">Description<input name="description" maxLength="250" value={form.description} onChange={update} placeholder="Optional note"/></label>{error&&<p className="error wide" role="alert">{error}</p>}<button type="submit">Add transaction</button></form></section>;
+}
